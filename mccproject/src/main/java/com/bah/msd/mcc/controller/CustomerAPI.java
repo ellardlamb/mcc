@@ -16,7 +16,7 @@ import com.bah.msd.mcc.repository.InMemoryCustomerRepository;
 
 @RestController
 @RequestMapping("/account")
-public class CustomerRestController {
+public class CustomerAPI {
 	private InMemoryCustomerRepository data = new InMemoryCustomerRepository();
 	
 	@GetMapping("/customers/all")
