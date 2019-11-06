@@ -4,6 +4,13 @@ public class Customer {
 	private String name;
 	private String email;
 	private String password;
+
+	public Customer() {
+		super();
+		this.name = "";
+		this.email = "";
+		this.password = "";
+	}
 	
 	public Customer(String name, String email, String password) {
 		super();
@@ -11,9 +18,7 @@ public class Customer {
 		this.email = email;
 		this.password = password;
 	}
-	public Customer() {
-		// TODO Auto-generated constructor stub
-	}
+
 	public String getName() {
 		return name;
 	}

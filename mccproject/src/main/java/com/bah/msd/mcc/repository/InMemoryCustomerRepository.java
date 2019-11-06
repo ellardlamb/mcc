@@ -25,8 +25,11 @@ public class InMemoryCustomerRepository {
 	public InMemoryCustomerRepository() {
 		this.createInitData();
 	}
-	public Customer getCustomerByName(Integer index) {
+	public Customer getCustomer(Integer index) {
 		return customers.get(index);
+	}
+	public void addCustomer(Customer customer) {
+		customers.add(customer);
 	}
 	public Collection<Customer> getCustomers() {
 		return customers;
