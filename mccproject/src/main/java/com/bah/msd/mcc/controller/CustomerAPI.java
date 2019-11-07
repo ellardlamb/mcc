@@ -1,6 +1,7 @@
 package com.bah.msd.mcc.controller;
 
 import java.net.URI;
+import java.util.Iterator;
 
 import javax.transaction.Transactional;
 
@@ -21,19 +22,19 @@ import com.bah.msd.mcc.domain.Customer;
 import com.bah.msd.mcc.repository.CustomerRepository;
 
 @RestController
-@RequestMapping("/account/customers")
+@RequestMapping("/customers")
 public class CustomerAPI {
 
 	@Autowired
 	private CustomerRepository repo;
 
 	@GetMapping
-	public Iterable<Customer> getAllCustomers() {
-		return repo.findAll();
+	public Iterator<Customer> getAllCustomers() {
+		return repo.findAll().iterator();
 	}
 
 	
-	@GetMapping("/{name}")
+	@GetMapping("/byname/{name}")
 	public Customer getCustomerByName(@PathVariable String name) { 
 		Customer customer = repo.findByNameAllIgnoringCase(name);
 		return customer;
