@@ -48,9 +48,10 @@ public class CustomerAPI {
 	 */
 
 	  @PostMapping("/byname/{name}")
-	  public ResponseEntity<?> addCustomer(@RequestBody Customer newCustomer,
+	  public ResponseEntity<?> addCustomer(@RequestBody Customer newCustomer, @PathVariable String name,
 			  UriComponentsBuilder uri) {
 		  if (newCustomer.getName() == null
+		      || !newCustomer.getName().equals(name)
 			  || newCustomer.getEmail() == null
 			  || newCustomer.getPassword() == null) {
 			  return ResponseEntity.badRequest().build();
