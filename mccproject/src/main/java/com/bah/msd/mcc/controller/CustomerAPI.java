@@ -52,6 +52,7 @@ public class CustomerAPI {
 			  UriComponentsBuilder uri) {
 		  if (newCustomer.getName() == null
 		      || !newCustomer.getName().equals(name)
+		      || repo.existsByName(name)
 			  || newCustomer.getEmail() == null
 			  || newCustomer.getPassword() == null) {
 			  return ResponseEntity.badRequest().build();
@@ -74,14 +75,19 @@ public class CustomerAPI {
 	  public ResponseEntity<?> updateCustomerByName(@RequestBody Customer updateCustomer, 
 			  @PathVariable("name") String name) {
 		  
-		  //Customer repoCustomer = repo.findByNameAllIgnoringCase(updateCustomer.getName());
 		  if(!updateCustomer.getName().equalsIgnoreCase(name)
 			 || updateCustomer.getEmail() == null
 		     || updateCustomer.getPassword() == null) {
 			  return ResponseEntity.badRequest().build();
 		  }
 		  
+		  //Check it user exists in repo, if not, return 404
+		  if(!repo.existsByName(name)) {
+			  return ResponseEntity.notFound().build();
+		  }
+		  
 		  updateCustomer = repo.save(updateCustomer);
+		  
 		  return ResponseEntity.ok().build();
 	  }
 	 

@@ -8,5 +8,6 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
 	Customer findByNameAllIgnoringCase (String name);
 	
 	void deleteByName(String name);
+	Boolean existsByName(String name);
 }
 
