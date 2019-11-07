@@ -12,8 +12,9 @@ import javax.persistence.Table;
 public class Event {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	Long id;
 	@Column(name="EVENT_CODE")
-	Long code;
+	String code;
 	@Column(name="EVENT_TITLE")
 	String title;
 	@Column(name="EVENT_DESCRIPTION")
@@ -23,11 +24,11 @@ public class Event {
 		super();
 	}
 
-	public Long getCode() {
+	public String getCode() {
 		return code;
 	}
 
-	public void setCode(Long code) {
+	public void setCode(String code) {
 		this.code = code;
 	}
 
@@ -45,5 +46,13 @@ public class Event {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

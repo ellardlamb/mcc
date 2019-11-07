@@ -1,8 +1,7 @@
 package com.bah.msd.mcc.controller;
 
 import java.net.URI;
-
-import javax.transaction.Transactional;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,25 +20,32 @@ import com.bah.msd.mcc.domain.Customer;
 import com.bah.msd.mcc.repository.CustomerRepository;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/account/customers")
 public class CustomerAPI {
 
 	@Autowired
 	private CustomerRepository repo;
 	
-	@GetMapping("/customers/all")
-	public Iterable<Customer> getAll() {
+	@GetMapping
+	public Iterable<Customer> getAllCustomers() {
 		return repo.findAll();
 	}
 	
-	@GetMapping("/customers/{name}")
-	public Customer getCustomerByName(@PathVariable String name) {
-		Customer customer = repo.findByNameAllIgnoringCase(name);
-
+	/*
+	 * @GetMapping("/{name}") public Customer getCustomerByName(@PathVariable String
+	 * name) { Customer customer = repo.findByNameAllIgnoringCase(name);
+	 * 
+	 * return customer; }
+	 */
+	
+	@GetMapping("/{id}")
+	public Optional<Customer> getCustomerById(@PathVariable Long id) {
+		Optional<Customer> customer = repo.findById(id);
+		
 		return customer;
 	}
 	
-	@PostMapping("/customers")
+	@PostMapping
 	public ResponseEntity<?> addCustomer(@RequestBody Customer newCustomer, UriComponentsBuilder uri) {
 		if(newCustomer.getId() != 0
 			|| newCustomer.getName() == null
@@ -49,30 +55,48 @@ public class CustomerAPI {
 		}
 		newCustomer = repo.save(newCustomer);
 		
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
-				.buildAndExpand(newCustomer.getName()).toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(newCustomer.getId()).toUri();
 		
 		ResponseEntity<?> response = ResponseEntity.created(location).build();
 		
 		return response;
 	}
 	
-	@PutMapping("/customers/{name}")
-	public ResponseEntity<?> putCustomer(@RequestBody Customer newCustomer, @PathVariable("name") String name) {
-		if(!newCustomer.getName().equalsIgnoreCase(name)
-			|| newCustomer.getEmail() == null
-			|| newCustomer.getPassword() == null
-			|| newCustomer.getId() == null) {
+	/*
+	 * @PutMapping("/{name}") public ResponseEntity<?>
+	 * updateCustomerByName(@RequestBody Customer
+	 * updateCustomer, @PathVariable("name") String name) {
+	 * if(!updateCustomer.getName().equalsIgnoreCase(name) ||
+	 * updateCustomer.getEmail() == null || updateCustomer.getPassword() == null ||
+	 * updateCustomer.getId() == null) { return ResponseEntity.badRequest().build();
+	 * } updateCustomer = repo.save(updateCustomer); return
+	 * ResponseEntity.ok().build(); }
+	 */
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<?> updateCustomerById(@RequestBody Customer updateCustomer, @PathVariable("id") Long id) {
+		if(updateCustomer.getId() != id
+			|| updateCustomer.getEmail() == null
+			|| updateCustomer.getPassword() == null
+			|| updateCustomer.getId() == null) {
 			return ResponseEntity.badRequest().build();
 		}
-		newCustomer = repo.save(newCustomer);
+		updateCustomer = repo.save(updateCustomer);
 		return ResponseEntity.ok().build();
-	}
+	}	
 	
-	@Transactional
-	@DeleteMapping("/customers/{name}")
-	public ResponseEntity<?> deleteCustomer(@PathVariable("name") String name) {
-		repo.deleteByName(name);
+	/*
+	 * @Transactional
+	 * 
+	 * @DeleteMapping("/{name}") public ResponseEntity<?>
+	 * deleteCustomerByName(@PathVariable("name") String name) {
+	 * repo.deleteByName(name); return ResponseEntity.ok().build(); }
+	 */
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteCustomerById(@PathVariable("id") Long id) {
+		repo.deleteById(id);
 		return ResponseEntity.ok().build();
 	}
 }
