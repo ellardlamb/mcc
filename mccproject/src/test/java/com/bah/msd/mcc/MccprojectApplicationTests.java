@@ -11,6 +11,7 @@ public class MccprojectApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		
 	}
 
 }
