@@ -12,13 +12,13 @@ import javax.persistence.Table;
 public class Event {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	Long id;
+	private Long id;
 	@Column(name="EVENT_CODE")
-	String code;
+	private String code;
 	@Column(name="EVENT_TITLE")
-	String title;
+	private String title;
 	@Column(name="EVENT_DESCRIPTION")
-	String description;
+	private String description;
 	
 	public Event() {
 		super();
