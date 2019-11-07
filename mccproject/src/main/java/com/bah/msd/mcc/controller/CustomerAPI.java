@@ -47,7 +47,7 @@ public class CustomerAPI {
 	 * return customer; }
 	 */
 
-	  @PostMapping("/byName/{name}")
+	  @PostMapping("/byname/{name}")
 	  public ResponseEntity<?> addCustomer(@RequestBody Customer newCustomer,
 			  UriComponentsBuilder uri) {
 		  if (newCustomer.getName() == null
@@ -59,7 +59,7 @@ public class CustomerAPI {
 		  newCustomer = repo.save(newCustomer);
 	  
 		  URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-				  .path("/byName/{name}")
+				  .path("/byname/{name}")
 				  .buildAndExpand(newCustomer.getName()).toUri();
   
 		  ResponseEntity<?> response = ResponseEntity.created(location).build();
