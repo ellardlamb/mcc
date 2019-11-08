@@ -7,20 +7,29 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 @Entity
+@Table(name = "REGISTRATIONS")
 public class Registration {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="ID")	
 	private Long id;
-	@Column
-	private String eventName;
-	@Column
-	private String customerName;
-	@Column
+	@Column(name="EVENT_ID")
+	private Long eventId;
+	@Column(name="CUSTOMER_ID")
+	private Long customerId;
+	
+	@Column(name="REGISTRATION_DATE")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date date;
-	@Column
+	@Column(name="NOTES")
 	private String note;
 	
 	public Registration() {
@@ -35,22 +44,25 @@ public class Registration {
 		this.id = id;
 	}
 
-	public String getEventName() {
-		return eventName;
+	@JsonProperty("event_id")
+	public Long getEventId() {
+		return eventId;
 	}
 
-	public void setEventName(String eventName) {
-		this.eventName = eventName;
+	public void setEventId(Long eventId) {
+		this.eventId = eventId;
 	}
 
-	public String getCustomerName() {
-		return customerName;
+	@JsonProperty("customer_id")
+	public Long getCustomerId() {
+		return customerId;
 	}
 
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
 	}
 
+	@JsonProperty("registration_date")
 	public Date getDate() {
 		return date;
 	}
@@ -59,6 +71,7 @@ public class Registration {
 		this.date = date;
 	}
 
+	@JsonProperty("notes")
 	public String getNote() {
 		return note;
 	}
