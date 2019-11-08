@@ -77,7 +77,9 @@ public class CustomerAPI {
 	  public ResponseEntity<?> updateCustomerByName(@RequestBody Customer updateCustomer, 
 			  @PathVariable("name") String name) {
 		  
-		  if(!updateCustomer.getName().equalsIgnoreCase(name)
+		  if(updateCustomer.getId() == null
+			 || updateCustomer.getName() == null
+		     ||!updateCustomer.getName().equalsIgnoreCase(name)
 			 || updateCustomer.getEmail() == null
 		     || updateCustomer.getPassword() == null)
 		  {
@@ -89,6 +91,12 @@ public class CustomerAPI {
 			  return ResponseEntity.notFound().build();
 		  }
 		  
+		  //Cannot have duplicate names in this application
+		  Customer repoCustomer = repo.findByNameAllIgnoringCase(name);
+		  if(!repoCustomer.getId().equals(updateCustomer.getId())){
+			  return ResponseEntity.badRequest().build();
+		  }
+		  
 		  updateCustomer = repo.save(updateCustomer);
 		  
 		  return ResponseEntity.ok().build();
@@ -97,27 +105,36 @@ public class CustomerAPI {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateCustomerById(@RequestBody Customer updateCustomer, @PathVariable("id") Long id) {
-		if (!updateCustomer.getId().equals(id)
+		if (updateCustomer.getId() == null
+				|| !updateCustomer.getId().equals(id)
 				|| updateCustomer.getEmail() == null
-				|| updateCustomer.getPassword() == null
-				|| updateCustomer.getId() == null) {
+				|| updateCustomer.getPassword() == null) {
 			return ResponseEntity.badRequest().build();
 		}
+		
+		//Check it user exists in repo, if not, return 404
+		//NOTE: Temporarily commenting out below check because front-end code
+		//uses PUT request to create new resource...not sure why...
+		//need to clarify this with instructor
+//		if(!repo.existsById(id)) {
+//			return ResponseEntity.notFound().build();
+//		}
+		  
 		updateCustomer = repo.save(updateCustomer);
 		return ResponseEntity.ok().build();
 	}
 
 	@Transactional
-	@DeleteMapping("/{name}")
+	@DeleteMapping("/byname/{name}")
 	public ResponseEntity<?> deleteCustomerByName(@PathVariable("name") String name) {
 		repo.deleteByName(name);
 		return ResponseEntity.ok().build();
 	}
 	 
 
-//	@DeleteMapping("/{id}")
-//	public ResponseEntity<?> deleteCustomerById(@PathVariable("id") Long id) {
-//		repo.deleteById(id);
-//		return ResponseEntity.ok().build();
-//	}
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteCustomerById(@PathVariable("id") Long id) {
+		repo.deleteById(id);
+		return ResponseEntity.ok().build();
+	}
 }
