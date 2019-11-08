@@ -2,6 +2,7 @@
   package com.bah.msd.mcc.controller;
 
 import java.net.URI;
+import java.util.Iterator;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +22,15 @@ import com.bah.msd.mcc.domain.Event;
 import com.bah.msd.mcc.repository.EventRepository;
 
 @RestController
-@RequestMapping("/account/events")
+@RequestMapping("/events")
 public class EventAPI {
   
 	@Autowired
 	private EventRepository repo;
 	
 	@GetMapping
-	public Iterable<Event> getAllEvents() {
-		return repo.findAll();
+	public Iterator<Event> getAllEvents() {
+		return repo.findAll().iterator();
 	}
 	
 	@GetMapping("/{id}")
@@ -41,8 +42,7 @@ public class EventAPI {
 	
 	@PostMapping
 	public ResponseEntity<?> addEvent(@RequestBody Event newEvent, UriComponentsBuilder uri) {
-		if(newEvent.getId() != 0
-			|| newEvent.getCode() == null
+		if(    newEvent.getCode() == null
 			|| newEvent.getDescription() == null
 			|| newEvent.getTitle() == null) {
 			return ResponseEntity.badRequest().build();					
@@ -59,12 +59,22 @@ public class EventAPI {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateEventById(@RequestBody Event updateEvent, @PathVariable("id") Long id) {
-		if(updateEvent.getId() != id
+		if( updateEvent.getId() == null
+				|| !updateEvent.getId().equals(id)
 				|| updateEvent.getCode() == null
 				|| updateEvent.getDescription() == null
 				|| updateEvent.getTitle() == null) {
 			return ResponseEntity.badRequest().build();
 		}
+		
+		//Check it event exists in repo, if not, return 404
+		//NOTE: Temporarily commenting out below check because front-end code
+		//uses PUT request to create new resource...not sure why...
+		//need to clarify this with instructor
+//		if(!repo.existsById(id)) {
+//			return ResponseEntity.notFound().build();
+//		}
+		
 		updateEvent = repo.save(updateEvent);
 		return ResponseEntity.ok().build();
 	}
