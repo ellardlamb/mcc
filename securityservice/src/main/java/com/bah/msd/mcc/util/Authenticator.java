@@ -1,25 +1,25 @@
 package com.bah.msd.mcc.util;
 
+import com.bah.msd.mcc.domain.Customer;
+
 public class Authenticator {
 	
-	public static boolean checkUser(String username) {
+	public static boolean checkUser(String username, String usernameCheck) {
+		
 		if( (username != null && username.length() > 0) &&
-			( username.equalsIgnoreCase("Bruce")) ) {
+			( username.equalsIgnoreCase(usernameCheck)) ) {
 			return true;
 		}else {
 			return false;
 		}
 	}
 	
-	public static boolean checkPassword(String username, String password) {
-		if(checkUser(username)) {
-			if(username.equalsIgnoreCase("Bruce") && password.equals("changeit")) {
+	public static boolean checkCredentials(String username, String password, Customer customer) {
+		
+		if(checkUser(username, customer.getName()) && password.equalsIgnoreCase(customer.getPassword())) {
 				return true;
-			}		
 		}else {
 			return false;
 		}
-		return false;
 	}
-	
 }
