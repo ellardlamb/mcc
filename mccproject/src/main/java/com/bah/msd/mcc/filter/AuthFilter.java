@@ -12,15 +12,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Component;
 
-import com.bah.msd.mcc.util.JWTHelper;
-import com.bah.msd.mcc.util.JWTUtil;
+import com.bah.msd.mcc.security.JWTHelper;
+import com.bah.msd.mcc.security.JWTUtil;
+
+
 
 @Component
 public class AuthFilter implements Filter {
 
 	JWTUtil jwtUtil = new JWTHelper();
 	
-	//private String api_scope = "com.api.customer.r";
+	private String api_scope = "com.api.customer.r";
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -29,29 +31,27 @@ public class AuthFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		String uri = req.getRequestURI();
-		if (uri.startsWith("/token")) {
+		if (uri.startsWith("/token") || uri.startsWith("/register")) {
 			// continue on to get-token endpoint
 			chain.doFilter(request, response);
 			return;
+		} else {
+			// check JWT token
+			String authheader = req.getHeader("authorization");
+			if (authheader != null && authheader.length() > 7 && authheader.startsWith("Bearer")) {
+				String jwt_token = authheader.substring(7, authheader.length());
+				if (jwtUtil.verifyToken(jwt_token)) {
+					String request_scopes = jwtUtil.getScopes(jwt_token);
+					if (request_scopes.contains(api_scope)) {
+						// continue on to api
+						chain.doFilter(request, response);
+						return;
+					}
+				}
+			}
 		}
-//		} else {
-//			// check JWT token
-//			String authheader = req.getHeader("authorization");
-//			if (authheader != null && authheader.length() > 7 && authheader.startsWith("Bearer")) {
-//				String jwt_token = authheader.substring(7, authheader.length());
-//				if (jwtUtil.verifyToken(jwt_token)) {
-//					String request_scopes = jwtUtil.getScopes(jwt_token);
-//					if (request_scopes.contains(api_scope)) {
-//						// continue on to api
-//						chain.doFilter(request, response);
-//						return;
-//					}
-//				}
-//			}
-//		}
 
 		// reject request and return error instead of data
-		//res.sendError(HttpServletResponse.SC_FORBIDDEN, "failed authentication");
-		chain.doFilter(request, response);
+		res.sendError(HttpServletResponse.SC_FORBIDDEN, "failed authentication");
 	}
 }

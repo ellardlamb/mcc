@@ -1,4 +1,4 @@
-package com.bah.msd.mcc.api;
+package com.bah.msd.mcc.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bah.msd.mcc.domain.Token;
-import com.bah.msd.mcc.util.Authenticator;
-import com.bah.msd.mcc.util.JWTHelper;
-import com.bah.msd.mcc.util.JWTUtil;
-import com.bah.msd.mcc.valueobject.TokenRequestData;
+import com.bah.msd.mcc.domain.Customer;
+import com.bah.msd.mcc.repository.CustomerRepository;
 
 @RestController
 @RequestMapping("/token")
 public class TokenAPI {
+	
+	@Autowired
+	private CustomerRepository repo;
 	
 	JWTUtil jwtUtil = new JWTHelper();
 	
@@ -26,10 +26,13 @@ public class TokenAPI {
 		String username = tokenRequestData.getUsername();
 		String password = tokenRequestData.getPassword();
 		
-		if (username != null && username.length() > 0 
+		Customer customer = repo.findByNameAllIgnoringCase(username);
+		
+		if (customer != null && username != null && username.length() > 0 
 				&& password != null && password.length() > 0 
-				&& Authenticator.checkPassword(username, password)) {
-			Token token = jwtUtil.createToken();
+				&& Authenticator.checkCredentials(username, password, customer)) {
+			//String secret = username + password;
+			Token token = jwtUtil.createToken("secret");
 			ResponseEntity<?> response = ResponseEntity.ok(token);
 			return response;			
 		}

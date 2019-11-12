@@ -24,4 +24,5 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	compile group: 'com.auth0', name: 'java-jwt', version:'3.8.1'
 }
