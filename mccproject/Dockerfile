@@ -2,7 +2,7 @@ FROM openjdk:8-jdk-alpine
 
 VOLUME /tmp
 
-ARG JAR_FILE=build/libs/mccproject-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=build/libs/mcc*.jar
 
 COPY ${JAR_FILE} app.jar
 
