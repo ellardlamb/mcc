@@ -15,16 +15,16 @@ import com.bah.msd.mcc.domain.Token;
 public class JWTHelper implements JWTUtil {
 	
 	@Override
-	public Token createToken(String secret) {
+	public Token createToken(String scope) {
 		
 		try {
-		    Algorithm algorithm = Algorithm.HMAC256(secret);
+		    Algorithm algorithm = Algorithm.HMAC256("secret");
 		    long fiveHoursInMillis = 1000 * 60 * 60 * 5;
 		    Date expireDate = new Date(System.currentTimeMillis() + fiveHoursInMillis);
 		    String token = JWT.create()
 		    	.withSubject("apiuser")
 		        .withIssuer("me@me.com")
-		        .withClaim("scopes", "com.api.customer.r")
+		        .withClaim("scopes", scope)
 		        .withExpiresAt(expireDate)
 		        .sign(algorithm);
 		    return new Token(token);

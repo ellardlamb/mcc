@@ -22,7 +22,7 @@ public class AuthFilter implements Filter {
 
 	JWTUtil jwtUtil = new JWTHelper();
 	
-	private String api_scope = "com.api.customer.r";
+	private static final String API_SCOPE = "com.api.customer.r";
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -31,7 +31,7 @@ public class AuthFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		String uri = req.getRequestURI();
-		if (uri.startsWith("/token") || uri.startsWith("/register")) {
+		if (uri.startsWith("/account/token") || uri.startsWith("/account/register")) {
 			// continue on to get-token endpoint
 			chain.doFilter(request, response);
 			return;
@@ -42,7 +42,7 @@ public class AuthFilter implements Filter {
 				String jwt_token = authheader.substring(7, authheader.length());
 				if (jwtUtil.verifyToken(jwt_token)) {
 					String request_scopes = jwtUtil.getScopes(jwt_token);
-					if (request_scopes.contains(api_scope)) {
+					if (request_scopes.contains(API_SCOPE)) {
 						// continue on to api
 						chain.doFilter(request, response);
 						return;

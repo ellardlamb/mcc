@@ -5,5 +5,5 @@ import com.bah.msd.mcc.domain.Token;
 public interface JWTUtil {
 	public boolean verifyToken(String jwtToken);
 	public String getScopes(String jwtToken) ;
-	public Token createToken(String jwtToken) ;
+	public Token createToken(String scope) ;
 }
