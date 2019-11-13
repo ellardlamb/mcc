@@ -30,13 +30,8 @@ public class AuthFilter implements Filter {
 
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
-		String uri = req.getRequestURI();
-		if (uri.startsWith("/account/token") || uri.startsWith("/account/register")) {
-			// continue on to get-token endpoint
-			chain.doFilter(request, response);
-			return;
-		} else {
-			// check JWT token
+
+			// check JWT token for all url requests to data api
 			String authheader = req.getHeader("authorization");
 			if (authheader != null && authheader.length() > 7 && authheader.startsWith("Bearer")) {
 				String jwt_token = authheader.substring(7, authheader.length());
@@ -49,7 +44,7 @@ public class AuthFilter implements Filter {
 					}
 				}
 			}
-		}
+		//}
 
 		// reject request and return error instead of data
 		res.sendError(HttpServletResponse.SC_FORBIDDEN, "failed authentication");
