@@ -52,10 +52,13 @@ public class CustomerAPI {
 	public ResponseEntity<?> addCustomer(@RequestBody Customer newCustomer, @PathVariable String name,
 		  UriComponentsBuilder uri) {
 		if (newCustomer.getName() == null
+		  || newCustomer.getName().isEmpty()		
 	      || !newCustomer.getName().equals(name)
 	      || repo.existsByName(name)
 		  || newCustomer.getEmail() == null
-		  || newCustomer.getPassword() == null)
+		  || newCustomer.getEmail().isEmpty()
+		  || newCustomer.getPassword() == null
+		  || newCustomer.getPassword().isEmpty())
 		{
 		  return ResponseEntity.badRequest().build();
 		}
@@ -79,9 +82,12 @@ public class CustomerAPI {
 		  
 		  if(updateCustomer.getId() == null
 			 || updateCustomer.getName() == null
-		     ||!updateCustomer.getName().equalsIgnoreCase(name)
+			 || updateCustomer.getName().isEmpty()
+		     || !updateCustomer.getName().equalsIgnoreCase(name)
 			 || updateCustomer.getEmail() == null
-		     || updateCustomer.getPassword() == null)
+			 || updateCustomer.getEmail().isEmpty()
+		     || updateCustomer.getPassword() == null
+		     || updateCustomer.getPassword().isEmpty())
 		  {
 			  return ResponseEntity.badRequest().build();
 		  }
@@ -108,7 +114,9 @@ public class CustomerAPI {
 		if (updateCustomer.getId() == null
 				|| !updateCustomer.getId().equals(id)
 				|| updateCustomer.getEmail() == null
-				|| updateCustomer.getPassword() == null) {
+				|| updateCustomer.getEmail().isEmpty()
+				|| updateCustomer.getPassword() == null
+				|| updateCustomer.getPassword().isEmpty()) {
 			return ResponseEntity.badRequest().build();
 		}
 		

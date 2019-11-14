@@ -23,9 +23,6 @@ public class Customer {
 
 	public Customer() {
 		super();
-		this.name = "";
-		this.email = "";
-		this.password = "";
 	}
 	
 	public Customer(String name, String email, String password) {

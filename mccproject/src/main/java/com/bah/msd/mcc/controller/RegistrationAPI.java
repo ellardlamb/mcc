@@ -44,7 +44,8 @@ public class RegistrationAPI {
 		if(    newRegistration.getCustomerId() == null
 			|| newRegistration.getDate() == null
 			|| newRegistration.getEventId() == null
-			|| newRegistration.getNote() == null) {
+			|| newRegistration.getNote() == null
+			|| newRegistration.getNote().isEmpty()) {
 			return ResponseEntity.badRequest().build();					
 		}
 		newRegistration = repo.save(newRegistration);
@@ -64,7 +65,8 @@ public class RegistrationAPI {
 				|| updateRegistration.getDate() == null
 				|| updateRegistration.getCustomerId() == null
 				|| updateRegistration.getEventId() == null
-				|| updateRegistration.getNote() == null) {
+				|| updateRegistration.getNote() == null
+				|| updateRegistration.getNote().isEmpty()) {
 			return ResponseEntity.badRequest().build();
 		}
 		

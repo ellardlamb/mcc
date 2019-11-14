@@ -43,8 +43,11 @@ public class EventAPI {
 	@PostMapping
 	public ResponseEntity<?> addEvent(@RequestBody Event newEvent, UriComponentsBuilder uri) {
 		if(    newEvent.getCode() == null
-			|| newEvent.getDescription() == null
-			|| newEvent.getTitle() == null) {
+				|| newEvent.getCode().isEmpty()
+				|| newEvent.getDescription() == null
+				|| newEvent.getDescription().isEmpty()
+				|| newEvent.getTitle() == null
+				|| newEvent.getTitle().isEmpty()) {
 			return ResponseEntity.badRequest().build();					
 		}
 		newEvent = repo.save(newEvent);
@@ -62,8 +65,11 @@ public class EventAPI {
 		if( updateEvent.getId() == null
 				|| !updateEvent.getId().equals(id)
 				|| updateEvent.getCode() == null
+				|| updateEvent.getCode().isEmpty()
 				|| updateEvent.getDescription() == null
-				|| updateEvent.getTitle() == null) {
+				|| updateEvent.getDescription().isEmpty()
+				|| updateEvent.getTitle() == null
+				|| updateEvent.getTitle().isEmpty()) {
 			return ResponseEntity.badRequest().build();
 		}
 		
