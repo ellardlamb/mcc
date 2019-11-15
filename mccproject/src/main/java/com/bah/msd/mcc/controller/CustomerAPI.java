@@ -113,6 +113,8 @@ public class CustomerAPI {
 	public ResponseEntity<?> updateCustomerById(@RequestBody Customer updateCustomer, @PathVariable("id") Long id) {
 		if (updateCustomer.getId() == null
 				|| !updateCustomer.getId().equals(id)
+				|| updateCustomer.getName() == null
+				|| updateCustomer.getName().isEmpty()				
 				|| updateCustomer.getEmail() == null
 				|| updateCustomer.getEmail().isEmpty()
 				|| updateCustomer.getPassword() == null
